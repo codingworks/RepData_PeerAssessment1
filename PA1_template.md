@@ -3,7 +3,14 @@ Reproducible Research: Peer Assessment 1
 
 ## Loading and preprocessing the data
 
-Make sure the data file activity.csv is in the working directory.
+Make sure packages dplyr and ggplot2 are installed and the data file activity.csv is in the working directory.
+
+Load the packages:
+
+```r
+library(dplyr)
+library(ggplot2)
+```
 
 Load the data:
 
@@ -14,7 +21,6 @@ data <- read.csv("activity.csv", sep = ",", header = TRUE)
 Filter out missing data:
 
 ```r
-library(dplyr)
 data_nona <- filter(data, !is.na(steps))
 ```
 
@@ -31,14 +37,13 @@ data_nona_tot <- select(data_nona, date, steps) %>%
 Make a histogram of the total number of steps taken each day:
 
 ```r
-library(ggplot2)
 ggplot(data_nona_tot, aes(x = steps)) +
      geom_histogram(binwidth = 1000, color = "black", fill = "white") +
      xlab("Steps per day") +
      ylab("Days")
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
 
 Calculate the median total number of steps taken each day:
 
@@ -53,11 +58,11 @@ median(data_nona_tot$steps)
 Calculate the mean total number of steps taken each day:
 
 ```r
-mean(data_nona_tot$steps)
+round(mean(data_nona_tot$steps), digits = 0)
 ```
 
 ```
-## [1] 10766.19
+## [1] 10766
 ```
 
 ## What is the average daily activity pattern?
@@ -65,14 +70,15 @@ Make a time series plot of the 5-minute interval (x-axis) and the average number
 
 ```r
 data_avg <- select(data_nona, interval, steps) %>% 
-    group_by(interval) %>% summarise_each(funs(mean))
+    group_by(interval) %>% summarise_each(funs(mean)) %>%
+    mutate(steps = round(steps, digits = 0))
 ggplot(data_avg, aes(interval, steps)) +
     geom_line() +
     xlab("Interval") +
     ylab("Number of steps")
 ```
 
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8-1.png) 
 
 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
@@ -85,8 +91,8 @@ interval_maxsteps
 ```
 ## Source: local data frame [1 x 2]
 ## 
-##   interval    steps
-## 1      835 206.1698
+##   interval steps
+## 1      835   206
 ```
 
 The answer is 835.
@@ -126,7 +132,7 @@ ggplot(data_new_tot, aes(x = steps)) +
     ylab("Days")
 ```
 
-![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png) 
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13-1.png) 
 
 Calculate the median total number of steps taken each day:
 
@@ -135,20 +141,20 @@ median(data_new_tot$steps)
 ```
 
 ```
-## [1] 10766.19
+## [1] 10762
 ```
 
 Calculate the mean total number of steps taken each day:
 
 ```r
-mean(data_new_tot$steps)
+round(mean(data_new_tot$steps), digits = 0)
 ```
 
 ```
-## [1] 10766.19
+## [1] 10766
 ```
 
-In comparison to the data set before imputing, the medians differ and the means are equal. The median is slightly higher after applying the imputing strategy.
+In comparison to the dataset before imputing, the medians differ and the means are equal. The median is slightly lower after applying the imputing strategy.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -164,12 +170,15 @@ Make a panel plot containing a time series plot of the 5-minute interval (x-axis
 
 ```r
 data_wkd_avg <- select(data_wkd, day_type, interval, steps) %>% 
-    group_by(day_type, interval) %>% summarise_each(funs(mean))
+    group_by(day_type, interval) %>% summarise_each(funs(mean)) %>%
+    mutate(steps = round(steps, digits = 0))
 ggplot(data_wkd_avg, aes(interval, steps)) +
     geom_line() +
-    facet_wrap(~day_type, ncol = 1) + xlab("Interval") +
+    facet_wrap(~day_type, ncol = 1) + 
+    xlab("Interval") +
     ylab("Number of steps")
 ```
 
-![plot of chunk unnamed-chunk-16](figure/unnamed-chunk-16-1.png) 
+![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17-1.png) 
 
+From the plot, we can see more steps in weekdays between an interval around 500 and an interval around 955. On the other hand, weekends see more activities after an interval around 955 and before an interval around 2130.
