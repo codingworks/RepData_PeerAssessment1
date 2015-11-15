@@ -163,9 +163,9 @@ Make a panel plot containing a time series plot of the 5-minute interval (x-axis
 
 
 ```r
-data_wkd_tot <- select(data_wkd, day_type, interval, steps) %>% 
+data_wkd_avg <- select(data_wkd, day_type, interval, steps) %>% 
     group_by(day_type, interval) %>% summarise_each(funs(mean))
-ggplot(data_wkd_tot, aes(interval, steps)) +
+ggplot(data_wkd_avg, aes(interval, steps)) +
     geom_line() +
     facet_wrap(~day_type, ncol = 1) + xlab("Interval") +
     ylab("Number of steps")
