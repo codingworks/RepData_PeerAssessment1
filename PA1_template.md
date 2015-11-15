@@ -181,4 +181,4 @@ ggplot(data_wkd_avg, aes(interval, steps)) +
 
 ![plot of chunk unnamed-chunk-17](figure/unnamed-chunk-17-1.png) 
 
-From the plot, we can see more steps in weekdays between an interval around 500 and an interval around 955. On the other hand, weekends see more activities after an interval around 955 and before an interval around 1750.
+From the plot, we can see more steps in weekdays between an interval around 500 and an interval around 955. On the other hand, weekends see more activities in general after an interval around 955 and before an interval around 1750.
